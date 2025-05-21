@@ -1,0 +1,10 @@
+{
+  "name": "user-selfie-app",
+  "version": "1.0.0",
+  "dependencies": {
+    "@azure/cosmos": "^3.17.0",
+    "@azure/storage-blob": "^12.8.0",
+    "openai": "^4.0.0",
+    "@sendgrid/mail": "^7.0.0"
+  }
+}

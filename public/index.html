@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <title>User Selfie App</title>
+</head>
+<body>
+  <h1>Tell us about you—and snap a selfie!</h1>
+  <form id="userForm">
+    <input name="fullName"   type="text"     placeholder="Full name"   required/><br/>
+    <input name="email"      type="email"    placeholder="Work email"   required/><br/>
+    <input name="company"    type="text"     placeholder="Company name" required/><br/>
+    <input name="selfie"     type="file"     accept="image/*" capture="user" required/><br/>
+    <button type="submit">Submit</button>
+  </form>
+
+  <script>
+  document.getElementById('userForm').onsubmit = async e => {
+    e.preventDefault();
+    const form = e.target;
+    const fullName = form.fullName.value;
+    const email    = form.email.value;
+    const company  = form.company.value;
+    const file     = form.selfie.files[0];
+
+    // read as base64
+    const dataUrl = await new Promise(res => {
+      const r = new FileReader();
+      r.onload = () => res(r.result);
+      r.readAsDataURL(file);
+    });
+    const base64 = dataUrl.split(',')[1];
+
+    // POST to Function
+    const resp = await fetch('/api/submit', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ fullName, email, company, image: base64 })
+    });
+    const j = await resp.json();
+    if (resp.ok) alert('All set! Check your inbox in a minute.');
+    else         alert('Error: ' + j.error);
+  };
+  </script>
+</body>
+</html>
